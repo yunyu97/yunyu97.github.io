@@ -4,163 +4,183 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dr. Yulun Li · Homepage</title>
-<meta name="description" content="Personal homepage: CV, research interests, publications and side projects.">
+<meta name="description" content="Yulun Li — neutrino phenomenology, Virginia Tech. CV, research interests, publications and side projects.">
 <link rel="icon" href="assets/professor-cat-sit.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f8f4ee;
-    --card: #fffdf9;
-    --ink: #2f2925;
-    --muted: #6f655d;
-    --line: #e6ddd2;
-    --accent: #8a6a52;      /* warm taupe, like the cat's legs */
-    --accent-ink: #fffaf3;
-    --tan: #e9d7c2;
-    --todo-bg: #fff4d6;
-    --todo-ink: #7a5a12;
+    --bg: #ffffff;
+    --soft: #f6f8fb;
+    --card: #ffffff;
+    --text: #67748e;          /* soft slate body text */
+    --heading: #344767;
+    --line: #e9ecef;
+    --grad-a: #0f4c81;        /* deep blue */
+    --grad-b: #13a3a3;        /* teal */
+    --grad: linear-gradient(310deg, var(--grad-b), var(--grad-a));
+    --accent: #0f6f8f;
+    --chip: #eef4f8;
+    --shadow: 0 4px 6px -1px rgba(20, 20, 20, .12), 0 2px 4px -1px rgba(20, 20, 20, .07);
+    --shadow-lg: 0 20px 27px rgba(0, 0, 0, .05);
+    --nav-bg: rgba(255, 255, 255, .94);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #1d1a18; --card: #26221f; --ink: #f1e9df; --muted: #b6aa9d;
-      --line: #3a342f; --accent: #c9a887; --accent-ink: #1d1a18; --tan: #3b3029;
-      --todo-bg: #3a3020; --todo-ink: #f0d38b;
+      --bg: #10151f; --soft: #151c28; --card: #1a2230; --text: #a9b4c7; --heading: #e8edf5;
+      --line: #263042; --grad-a: #5b8def; --grad-b: #3fd0c9; --accent: #67c6d6; --chip: #22304a;
+      --shadow: 0 4px 10px rgba(0, 0, 0, .35); --shadow-lg: 0 20px 27px rgba(0, 0, 0, .3);
+      --nav-bg: rgba(26, 34, 48, .94);
     }
   }
   :root[data-theme="dark"] {
-    --bg: #1d1a18; --card: #26221f; --ink: #f1e9df; --muted: #b6aa9d;
-    --line: #3a342f; --accent: #c9a887; --accent-ink: #1d1a18; --tan: #3b3029;
-    --todo-bg: #3a3020; --todo-ink: #f0d38b;
+    --bg: #10151f; --soft: #151c28; --card: #1a2230; --text: #a9b4c7; --heading: #e8edf5;
+    --line: #263042; --grad-a: #5b8def; --grad-b: #3fd0c9; --accent: #67c6d6; --chip: #22304a;
+    --shadow: 0 4px 10px rgba(0, 0, 0, .35); --shadow-lg: 0 20px 27px rgba(0, 0, 0, .3);
+    --nav-bg: rgba(26, 34, 48, .94);
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
   body {
-    margin: 0; background: var(--bg); color: var(--ink);
-    font: 16px/1.65 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.7 "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
   a { color: var(--accent); text-underline-offset: 3px; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+  h1, h2, h3, strong, b { color: var(--heading); }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 16px; }
 
-  /* ---------- header ---------- */
-  header { padding: 56px 0 24px; }
-  .who { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  /* ---------- floating pill navigation ---------- */
+  .nav-wrap { position: sticky; top: 12px; z-index: 10; margin-top: 12px; }
+  .navbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+    background: var(--nav-bg); backdrop-filter: saturate(200%) blur(30px); -webkit-backdrop-filter: saturate(200%) blur(30px);
+    border-radius: 40px; box-shadow: var(--shadow); padding: 8px 10px 8px 22px;
+  }
+  .brand { font-weight: 800; color: var(--heading); text-decoration: none; letter-spacing: .01em; }
+  nav[role="tablist"] { display: flex; flex-wrap: wrap; gap: 4px; }
+  [role="tab"] {
+    appearance: none; border: 0; cursor: pointer; background: transparent; color: var(--heading);
+    font: 600 .92rem "Open Sans", system-ui, sans-serif; padding: 8px 16px; border-radius: 40px;
+    transition: background .2s, color .2s;
+  }
+  [role="tab"]:hover { background: var(--soft); }
+  [role="tab"][aria-selected="true"] { background-image: var(--grad); color: #fff; box-shadow: var(--shadow); }
+  [role="tab"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (max-width: 600px) {
+    .navbar { justify-content: center; padding: 6px; }
+    .brand { display: none; }
+    nav[role="tablist"] { justify-content: center; gap: 0; }
+    [role="tab"] { padding: 7px 10px; font-size: .8rem; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero-intro { text-align: center; padding: 64px 0 40px; }
   .avatar {
-    width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
-    border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--line);
+    width: 112px; height: 112px; border-radius: 50%; object-fit: cover;
+    border: 4px solid var(--card); box-shadow: var(--shadow-lg), var(--shadow);
   }
   h1 {
-    font-family: Fraunces, Georgia, serif; font-weight: 650; font-size: 2.3rem;
-    line-height: 1.15; margin: 0;
+    margin: 18px 0 4px; font-size: clamp(2.2rem, 6vw, 3rem); font-weight: 700; line-height: 1.15;
+    background-image: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .tagline { margin: 4px 0 10px; color: var(--muted); }
-  .links { display: flex; gap: 14px; flex-wrap: wrap; font-size: .95rem; }
+  .subtitle { margin: 0; font-size: clamp(1.15rem, 3.4vw, 1.5rem); font-weight: 700; color: var(--heading); }
+  .pills { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .pill {
+    display: inline-flex; align-items: center; text-decoration: none; font-weight: 700; font-size: .9rem;
+    padding: 9px 20px; border-radius: 40px; color: #fff; background-image: var(--grad); box-shadow: var(--shadow);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .pill.outline { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
+  .pill:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg), var(--shadow); }
+  .pill:focus-visible { outline: 2px solid var(--heading); outline-offset: 2px; }
 
-  /* ---------- tabs ---------- */
-  nav[role="tablist"] {
-    display: flex; flex-wrap: wrap; gap: 0 4px; border-bottom: 1px solid var(--line);
-    margin-top: 8px;
-  }
-  @media (max-width: 480px) { [role="tab"] { padding: 10px 10px; } }
-  [role="tab"] {
-    appearance: none; background: none; border: 0; cursor: pointer;
-    font: 500 .98rem Inter, system-ui, sans-serif; color: var(--muted);
-    padding: 12px 14px; border-bottom: 2px solid transparent; white-space: nowrap;
-  }
-  [role="tab"]:hover { color: var(--ink); }
-  [role="tab"][aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-  [role="tab"]:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 6px; }
-
-  main { padding: 32px 0 64px; }
+  /* ---------- content cards ---------- */
+  main { padding-bottom: 40px; }
   .js [role="tabpanel"][hidden] { display: none; }
-  h2 { font-family: Fraunces, Georgia, serif; font-weight: 650; font-size: 1.5rem; margin: 0 0 16px; }
-  h3 { font-size: 1.05rem; margin: 28px 0 8px; }
-  section + section { margin-top: 8px; }
-
-  .todo {
-    background: var(--todo-bg); color: var(--todo-ink); border-radius: 4px;
-    padding: 0 4px; font-style: normal;
+  .panel { background: var(--card); border-radius: 16px; box-shadow: var(--shadow-lg), var(--shadow); padding: 32px; }
+  @media (max-width: 560px) { .panel { padding: 22px 18px; } }
+  h2 { font-size: 1.6rem; font-weight: 700; margin: 0 0 16px; }
+  h3 { font-size: 1.05rem; font-weight: 700; margin: 32px 0 6px; }
+  .photo { margin: -32px -32px 28px; border-radius: 16px 16px 0 0; overflow: hidden; background: var(--soft); }
+  .photo img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; object-position: 50% 44%; }
+  @media (max-width: 560px) {
+    .photo { margin: -22px -18px 22px; }
+    .photo img { aspect-ratio: 4 / 3; object-position: 70% 50%; }
   }
-  .note {
-    font-size: .9rem; color: var(--todo-ink); background: var(--todo-bg);
-    border-radius: 8px; padding: 10px 14px; margin-bottom: 24px;
-  }
+  .footnote { margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line); font-size: .9rem; }
 
-  /* home banner photo */
-  .hero { margin: 0 0 28px; border-radius: 14px; overflow: hidden; background: var(--tan); }
-  .hero img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; object-position: 50% 44%; }
-  @media (max-width: 560px) { .hero img { aspect-ratio: 4 / 3; object-position: 70% 50%; } }
-
-  /* timeline-ish entries for CV */
-  .entry { display: grid; grid-template-columns: 120px 1fr; gap: 4px 20px; padding: 12px 0; border-top: 1px solid var(--line); }
-  .entry:first-of-type { border-top: 0; }
-  .when { color: var(--muted); font-size: .92rem; }
+  .entry { display: grid; grid-template-columns: 130px 1fr; gap: 2px 22px; padding: 12px 0; border-top: 1px solid var(--line); }
+  h3 + .entry { border-top: 0; }
+  .when { font-size: .88rem; font-weight: 600; }
+  h4 { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 14px 0 0; color: var(--accent); }
+  h4 + .entry { border-top: 0; }
   .what strong { display: block; }
-  .what span { color: var(--muted); display: block; }
+  .what span { display: block; }
   @media (max-width: 560px) { .entry { grid-template-columns: 1fr; } }
 
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 14px 0 0; list-style: none; }
+  .chips li { background: var(--chip); color: var(--heading); border-radius: 40px; padding: 5px 14px; font-size: .88rem; font-weight: 600; }
+
+  ol.pubs, ul.pubs { padding-left: 1.3em; margin: 0; }
+  .pubs li { padding: 8px 0; }
+  .venue { font-style: italic; }
+
+  /* ---------- Professor Cat card ---------- */
+  .card { display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: center; }
+  .card img { width: 100%; height: auto; display: block; }
+  .card h3 { margin-top: 0; font-size: 1.3rem; }
+  .card p { margin: 0 0 14px; }
+  .dl { display: grid; gap: 12px; margin-top: 6px; }
+  .dl-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .dl-row .os { width: 100%; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
   .btn {
-    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
-    background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: .92rem;
-    padding: 9px 14px; border-radius: 8px;
+    display: inline-flex; text-decoration: none; font-weight: 700; font-size: .88rem; padding: 8px 18px;
+    border-radius: 40px; color: #fff; background-image: var(--grad); box-shadow: var(--shadow);
   }
   .btn.ghost { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
-  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .btn:focus-visible { outline: 2px solid var(--heading); outline-offset: 2px; }
+  .small { font-size: .85rem; margin-top: 16px; }
+  @media (max-width: 640px) { .card { grid-template-columns: 1fr; } .card img { max-width: 240px; margin: 0 auto; } }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
-  .chips li { background: var(--tan); border-radius: 999px; padding: 4px 12px; font-size: .92rem; }
-
-  ol.pubs { padding-left: 1.3em; margin: 0; }
-  ol.pubs li { padding: 8px 0; }
-  .venue { color: var(--muted); font-style: italic; }
-
-  /* ---------- project card ---------- */
-  .card {
-    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
-    padding: 24px; display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: center;
-  }
-  .card img { width: 100%; height: auto; display: block; }
-  .card h3 { margin-top: 0; font-family: Fraunces, Georgia, serif; font-size: 1.35rem; }
-  .card p { margin: 0 0 14px; }
-  .dl { display: grid; gap: 10px; margin-top: 6px; }
-  .dl-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .dl-row .os { width: 100%; font-size: .85rem; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
-  .small { font-size: .85rem; color: var(--muted); margin-top: 14px; }
-  @media (max-width: 640px) { .card { grid-template-columns: 1fr; } .card img { max-width: 260px; margin: 0 auto; } }
-
-  footer { border-top: 1px solid var(--line); padding: 20px 0 40px; color: var(--muted); font-size: .85rem; }
+  /* ---------- wave footer ---------- */
+  footer { position: relative; margin-top: 24px; color: #fff; text-align: center; font-size: .85rem; }
+  footer svg { display: block; width: 100%; height: 90px; }
+  footer .base { background-image: var(--grad); padding: 6px 16px 34px; margin-top: -1px; }
+  footer a { color: #fff; }
 </style>
 <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
-<header class="wrap">
-  <div class="who">
-    <img class="avatar" src="https://avatars.githubusercontent.com/u/33566110?v=4" alt="Profile photo">
-    <div>
-      <h1>Dr. Yulun Li</h1>
-      <p class="tagline">Research Assistant · Physics · Virginia Tech</p>
-      <div class="links">
-        <a href="https://github.com/yunyu97">GitHub</a>
-        <a href="https://scholar.google.com/citations?user=d1HLjcQAAAAJ&amp;hl=en">Google Scholar</a>
-        <a href="https://inspirehep.net/authors/2069319">INSPIRE-HEP</a>
-        <a href="mailto:yulunl@vt.edu">Email</a>
-      </div>
-    </div>
+<div class="wrap nav-wrap">
+  <div class="navbar">
+    <a class="brand" href="#home">Yulun Li</a>
+    <nav role="tablist" aria-label="Sections">
+      <button role="tab" id="tab-home" aria-controls="home" aria-selected="true">Home</button>
+      <button role="tab" id="tab-cv" aria-controls="cv" aria-selected="false" tabindex="-1">CV</button>
+      <button role="tab" id="tab-publications" aria-controls="publications" aria-selected="false" tabindex="-1">Publications</button>
+      <button role="tab" id="tab-more" aria-controls="more" aria-selected="false" tabindex="-1">Additional stuff</button>
+    </nav>
   </div>
+</div>
 
-  <nav role="tablist" aria-label="Sections">
-    <button role="tab" id="tab-home" aria-controls="home" aria-selected="true">Home</button>
-    <button role="tab" id="tab-cv" aria-controls="cv" aria-selected="false" tabindex="-1">CV</button>
-    <button role="tab" id="tab-publications" aria-controls="publications" aria-selected="false" tabindex="-1">Publications</button>
-    <button role="tab" id="tab-more" aria-controls="more" aria-selected="false" tabindex="-1">Additional stuff</button>
-  </nav>
+<header class="wrap hero-intro">
+  <img class="avatar" src="https://avatars.githubusercontent.com/u/33566110?v=4" width="112" height="112" alt="Profile photo">
+  <h1>Dr. Yulun Li</h1>
+  <p class="subtitle">Research Assistant · Physics · Virginia Tech</p>
+  <div class="pills">
+    <a class="pill" href="https://scholar.google.com/citations?user=d1HLjcQAAAAJ&amp;hl=en">Google Scholar</a>
+    <a class="pill" href="https://inspirehep.net/authors/2069319">INSPIRE-HEP</a>
+    <a class="pill outline" href="https://github.com/yunyu97">GitHub</a>
+    <a class="pill outline" href="mailto:yulunl@vt.edu">Email</a>
+  </div>
 </header>
 
 <main class="wrap">
   <!-- ===================== Home ===================== -->
-  <section role="tabpanel" id="home" aria-labelledby="tab-home">
-    <figure class="hero">
+  <section role="tabpanel" id="home" aria-labelledby="tab-home" class="panel">
+    <figure class="photo">
       <img src="assets/lake.jpg" width="1600" height="1344"
            alt="Autumn trees reflected in a still pond, with a mallard duck standing on a log">
     </figure>
@@ -169,12 +189,33 @@
 gateway to Beyond the Standard Model (BSM) phenomena by offering candidates for dark matter, providing
 frameworks to resolve experimental anomalies, and explaining other important questions such as the origin
 of neutrino mass.</p>
-    <ul class="chips" style="margin-bottom:8px">
+    <ul class="chips">
       <li>Neutrino phenomenology</li><li>Physics beyond the Standard Model</li><li>Heavy neutral leptons</li>
       <li>Coherent neutrino scattering (CE&nu;NS)</li><li>Neutron lifetime</li><li>Astroparticle physics</li>
     </ul>
+    <p class="footnote">Current projects and earlier work are listed under
+      <a href="#projects">Research projects</a> in my CV.</p>
+  </section>
 
-    <h3>Current projects</h3>
+  <!-- ===================== CV ===================== -->
+  <section role="tabpanel" id="cv" aria-labelledby="tab-cv" class="panel" hidden>
+    <h2>Curriculum vitae</h2>
+    <!-- To offer a PDF: upload cv.pdf (without the phone number) to this repo, then uncomment:
+    <p><a class="btn ghost" href="cv.pdf">Download full CV (PDF)</a></p>
+    -->
+
+    <h3>Education</h3>
+    <div class="entry"><div class="when">2020 – 2026</div>
+      <div class="what"><strong>Ph.D. in Physics</strong><span>Virginia Tech, Blacksburg, VA · Thesis advisor: Patrick Huber</span>
+        <span>Dissertation defense: November 6, 2026</span></div></div>
+
+    <h3>Research experience</h3>
+    <div class="entry"><div class="when">May 2021 – present</div>
+      <div class="what"><strong>Research Assistant, Prof. Patrick Huber’s group</strong>
+        <span>Virginia Tech · neutrino phenomenology</span></div></div>
+
+    <h3 id="projects">Research projects</h3>
+    <h4>Current</h4>
     <div class="entry"><div class="when">May 2026 – present</div>
       <div class="what"><strong>Lepton collider as a tau neutrino factory</strong>
         <span>Simulating the kinematics and physical processes of tau neutrino production at a lepton collider.</span></div></div>
@@ -189,7 +230,7 @@ of neutrino mass.</p>
         tension, and studying the systematics of the setup from theoretical uncertainties and experimental
         sensitivities.</span></div></div>
 
-    <h3>Earlier work</h3>
+    <h4>Earlier</h4>
     <div class="entry"><div class="when">2024 – 2025</div>
       <div class="what"><strong>New physics versus quenching factors</strong>
         <span>Studied the tensions among three coherent neutrino scattering cross-section experiments and showed how
@@ -199,24 +240,7 @@ of neutrino mass.</p>
         <span>Calculated the decay width of a heavy neutral lepton including the interference between charged- and
         neutral-current channels, estimated the sensitivity of future experiments and placed world-leading
         limits.</span></div></div>
-  </section>
 
-  <!-- ===================== CV ===================== -->
-  <section role="tabpanel" id="cv" aria-labelledby="tab-cv" hidden>
-    <h2>Curriculum vitae</h2>
-    <!-- To offer a PDF: upload cv.pdf (without the phone number) to this repo, then uncomment:
-    <p><a class="btn ghost" href="cv.pdf">Download full CV (PDF)</a></p>
-    -->
-
-    <h3>Education</h3>
-    <div class="entry"><div class="when">2020 – 2026</div>
-      <div class="what"><strong>Ph.D. in Physics</strong><span>Virginia Tech, Blacksburg, VA · Thesis advisor: Patrick Huber</span>
-        <span>Dissertation defense: November 6, 2026</span></div></div>
-
-    <h3>Research experience</h3>
-    <div class="entry"><div class="when">May 2021 – present</div>
-      <div class="what"><strong>Research Assistant, Prof. Patrick Huber’s group</strong>
-        <span>Virginia Tech · neutrino phenomenology; see <a href="#home">Home</a> for current projects</span></div></div>
 
     <h3>Teaching experience</h3>
     <div class="entry"><div class="when">Fall 2020 – present</div>
@@ -256,7 +280,7 @@ of neutrino mass.</p>
   </section>
 
   <!-- ===================== Publications ===================== -->
-  <section role="tabpanel" id="publications" aria-labelledby="tab-publications" hidden>
+  <section role="tabpanel" id="publications" aria-labelledby="tab-publications" class="panel" hidden>
     <h2>Publications</h2>
     <p>Full list on <a href="https://inspirehep.net/authors/2069319">INSPIRE-HEP</a> and
       <a href="https://scholar.google.com/citations?user=d1HLjcQAAAAJ&amp;hl=en">Google Scholar</a>.</p>
@@ -304,7 +328,7 @@ of neutrino mass.</p>
   </section>
 
   <!-- ===================== Additional stuff ===================== -->
-  <section role="tabpanel" id="more" aria-labelledby="tab-more" hidden>
+  <section role="tabpanel" id="more" aria-labelledby="tab-more" class="panel" hidden>
     <h2>Additional stuff</h2>
 
     <article class="card" aria-labelledby="cat-title">
@@ -333,7 +357,15 @@ of neutrino mass.</p>
   </section>
 </main>
 
-<footer class="wrap">© <span id="year">2026</span> Yulun Li · Built with plain HTML, hosted on GitHub Pages.</footer>
+<footer>
+  <svg viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="wave" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="var(--grad-a)"/><stop offset="1" stop-color="var(--grad-b)"/></linearGradient></defs>
+    <path fill="url(#wave)" d="M0,52 C240,92 480,6 760,30 C1040,54 1240,74 1440,22 L1440,90 L0,90 Z"/>
+    <path fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.5" d="M0,70 C260,96 520,30 780,46 C1040,62 1250,86 1440,46"/>
+  </svg>
+  <div class="base">© <span id="year">2026</span> Yulun Li · Built with plain HTML, hosted on GitHub Pages.</div>
+</footer>
 
 <script>
   (function () {
@@ -341,7 +373,6 @@ of neutrino mass.</p>
     var ids = tabs.map(function (t) { return t.getAttribute('aria-controls'); });
     var aliases = { research: 'home' };      // the old "Research interests" tab
     function show(id, focus) {
-      id = aliases[id] || id;
       if (ids.indexOf(id) < 0) id = ids[0];
       tabs.forEach(function (t) {
         var on = t.getAttribute('aria-controls') === id;
@@ -350,6 +381,18 @@ of neutrino mass.</p>
         document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
         if (on && focus) t.focus();
       });
+    }
+    // A hash is a tab (#cv), an old alias (#research), or something inside a tab (#projects):
+    // open the right tab, and for an inner target scroll to it below the floating nav.
+    function route() {
+      var h = decodeURIComponent(location.hash.slice(1));
+      h = aliases[h] || h;
+      if (ids.indexOf(h) >= 0 || !h) { show(h); window.scrollTo({ top: 0, behavior: 'instant' }); return; }
+      var el = document.getElementById(h);
+      var panel = el && el.closest('[role="tabpanel"]');
+      show(panel ? panel.id : ids[0]);
+      // wait one frame so the newly shown tab has its layout, then jump (not animate) to the target
+      if (el) setTimeout(function () { el.scrollIntoView({ block: 'start', behavior: 'instant' }); }, 0);
     }
     tabs.forEach(function (t, i) {
       t.addEventListener('click', function () { history.replaceState(null, '', '#' + ids[i]); show(ids[i]); });
@@ -360,13 +403,9 @@ of neutrino mass.</p>
         history.replaceState(null, '', '#' + ids[j]); show(ids[j], true);
       });
     });
-    // the section ids double as tab links (#publications etc.); keep the header in view
-    // instead of letting the browser jump to the section
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    function fromHash() { show(location.hash.slice(1)); window.scrollTo(0, 0); }
-    window.addEventListener('hashchange', fromHash);
-    window.addEventListener('load', function () { window.scrollTo(0, 0); });
-    fromHash();
+    window.addEventListener('hashchange', route);
+    route();
     document.getElementById('year').textContent = new Date().getFullYear();
   })();
 </script>
