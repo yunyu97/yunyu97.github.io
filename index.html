@@ -87,12 +87,17 @@
     border-radius: 8px; padding: 10px 14px; margin-bottom: 24px;
   }
 
+  /* home banner photo */
+  .hero { margin: 0 0 28px; border-radius: 14px; overflow: hidden; background: var(--tan); }
+  .hero img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; object-position: 50% 44%; }
+  @media (max-width: 560px) { .hero img { aspect-ratio: 4 / 3; object-position: 70% 50%; } }
+
   /* timeline-ish entries for CV */
   .entry { display: grid; grid-template-columns: 120px 1fr; gap: 4px 20px; padding: 12px 0; border-top: 1px solid var(--line); }
   .entry:first-of-type { border-top: 0; }
   .when { color: var(--muted); font-size: .92rem; }
   .what strong { display: block; }
-  .what span { color: var(--muted); }
+  .what span { color: var(--muted); display: block; }
   @media (max-width: 560px) { .entry { grid-template-columns: 1fr; } }
 
   .btn {
@@ -145,29 +150,73 @@
   </div>
 
   <nav role="tablist" aria-label="Sections">
-    <button role="tab" id="tab-cv" aria-controls="cv" aria-selected="true">CV</button>
-    <button role="tab" id="tab-research" aria-controls="research" aria-selected="false" tabindex="-1">Research interests</button>
+    <button role="tab" id="tab-home" aria-controls="home" aria-selected="true">Home</button>
+    <button role="tab" id="tab-cv" aria-controls="cv" aria-selected="false" tabindex="-1">CV</button>
     <button role="tab" id="tab-publications" aria-controls="publications" aria-selected="false" tabindex="-1">Publications</button>
     <button role="tab" id="tab-more" aria-controls="more" aria-selected="false" tabindex="-1">Additional stuff</button>
   </nav>
 </header>
 
 <main class="wrap">
+  <!-- ===================== Home ===================== -->
+  <section role="tabpanel" id="home" aria-labelledby="tab-home">
+    <figure class="hero">
+      <img src="assets/lake.jpg" width="1600" height="1344"
+           alt="Autumn trees reflected in a still pond, with a mallard duck standing on a log">
+    </figure>
+    <h2>Research interests</h2>
+    <p>I am interested in neutrino phenomenology. Neutrino physics serves as a
+gateway to Beyond the Standard Model (BSM) phenomena by offering candidates for dark matter, providing
+frameworks to resolve experimental anomalies, and explaining other important questions such as the origin
+of neutrino mass.</p>
+    <ul class="chips" style="margin-bottom:8px">
+      <li>Neutrino phenomenology</li><li>Physics beyond the Standard Model</li><li>Heavy neutral leptons</li>
+      <li>Coherent neutrino scattering (CE&nu;NS)</li><li>Neutron lifetime</li><li>Astroparticle physics</li>
+    </ul>
+
+    <h3>Current projects</h3>
+    <div class="entry"><div class="when">May 2026 – present</div>
+      <div class="what"><strong>Lepton collider as a tau neutrino factory</strong>
+        <span>Simulating the kinematics and physical processes of tau neutrino production at a lepton collider.</span></div></div>
+    <div class="entry"><div class="when">Jan 2026 – present</div>
+      <div class="what"><strong>Ancient Sgr A<sup>&#8902;</sup> activity</strong>
+        <span>Mapping the sensitivity for detecting past activity of Sagittarius A<sup>&#8902;</sup>, with cosmic rays from
+        star formation as the background, and simulating high-energy atmospheric neutrino detection with GEANT4,
+        GENIE and TRIM/SRIM.</span></div></div>
+    <div class="entry"><div class="when">May 2025 – present</div>
+      <div class="what"><strong>Neutron mean lifetime</strong>
+        <span>Proposing a new measurement of the neutron mean lifetime with enough sensitivity to resolve the current
+        tension, and studying the systematics of the setup from theoretical uncertainties and experimental
+        sensitivities.</span></div></div>
+
+    <h3>Earlier work</h3>
+    <div class="entry"><div class="when">2024 – 2025</div>
+      <div class="what"><strong>New physics versus quenching factors</strong>
+        <span>Studied the tensions among three coherent neutrino scattering cross-section experiments and showed how
+        the uncertainty in the nuclear-recoil quenching factor can mimic signals of BSM physics.</span></div></div>
+    <div class="entry"><div class="when">Sep 2022 – Dec 2024</div>
+      <div class="what"><strong>Heavy neutral lepton decay</strong>
+        <span>Calculated the decay width of a heavy neutral lepton including the interference between charged- and
+        neutral-current channels, estimated the sensitivity of future experiments and placed world-leading
+        limits.</span></div></div>
+  </section>
+
   <!-- ===================== CV ===================== -->
-  <section role="tabpanel" id="cv" aria-labelledby="tab-cv">
+  <section role="tabpanel" id="cv" aria-labelledby="tab-cv" hidden>
     <h2>Curriculum vitae</h2>
     <!-- To offer a PDF: upload cv.pdf (without the phone number) to this repo, then uncomment:
     <p><a class="btn ghost" href="cv.pdf">Download full CV (PDF)</a></p>
     -->
 
     <h3>Education</h3>
-    <div class="entry"><div class="when">2020 – present</div>
-      <div class="what"><strong>Ph.D. in Physics</strong><span>Virginia Tech, Blacksburg, VA · Thesis advisor: Patrick Huber</span></div></div>
+    <div class="entry"><div class="when">2020 – 2026</div>
+      <div class="what"><strong>Ph.D. in Physics</strong><span>Virginia Tech, Blacksburg, VA · Thesis advisor: Patrick Huber</span>
+        <span>Dissertation defense: November 6, 2026</span></div></div>
 
     <h3>Research experience</h3>
     <div class="entry"><div class="when">May 2021 – present</div>
       <div class="what"><strong>Research Assistant, Prof. Patrick Huber’s group</strong>
-        <span>Virginia Tech · neutrino phenomenology; see <a href="#research">Research interests</a> for projects</span></div></div>
+        <span>Virginia Tech · neutrino phenomenology; see <a href="#home">Home</a> for current projects</span></div></div>
 
     <h3>Teaching experience</h3>
     <div class="entry"><div class="when">Fall 2020 – present</div>
@@ -204,45 +253,6 @@
       <li>Group representation theory for flavor symmetries</li>
       <li>AI-assisted coding with physics-driven verification</li>
     </ul>
-  </section>
-
-  <!-- ===================== Research ===================== -->
-  <section role="tabpanel" id="research" aria-labelledby="tab-research" hidden>
-    <h2>Research interests</h2>
-    <p>I am interested in neutrino phenomenology. Neutrino physics serves as a
-gateway to Beyond the Standard Model (BSM) phenomena by offering candidates for dark matter, providing
-frameworks to resolve experimental anomalies, and explaining other important questions such as the origin
-of neutrino mass.</p>
-    <ul class="chips" style="margin-bottom:8px">
-      <li>Neutrino phenomenology</li><li>Physics beyond the Standard Model</li><li>Heavy neutral leptons</li>
-      <li>Coherent neutrino scattering (CE&nu;NS)</li><li>Neutron lifetime</li><li>Astroparticle physics</li>
-    </ul>
-
-    <h3>Current projects</h3>
-    <div class="entry"><div class="when">May 2026 – present</div>
-      <div class="what"><strong>Lepton collider as a tau neutrino factory</strong>
-        <span>Simulating the kinematics and physical processes of tau neutrino production at a lepton collider.</span></div></div>
-    <div class="entry"><div class="when">Jan 2026 – present</div>
-      <div class="what"><strong>Ancient Sgr A<sup>&#8902;</sup> activity</strong>
-        <span>Mapping the sensitivity for detecting past activity of Sagittarius A<sup>&#8902;</sup>, with cosmic rays from
-        star formation as the background, and simulating high-energy atmospheric neutrino detection with GEANT4,
-        GENIE and TRIM/SRIM.</span></div></div>
-    <div class="entry"><div class="when">May 2025 – present</div>
-      <div class="what"><strong>Neutron mean lifetime</strong>
-        <span>Proposing a new measurement of the neutron mean lifetime with enough sensitivity to resolve the current
-        tension, and studying the systematics of the setup from theoretical uncertainties and experimental
-        sensitivities.</span></div></div>
-
-    <h3>Earlier work</h3>
-    <div class="entry"><div class="when">2024 – 2025</div>
-      <div class="what"><strong>New physics versus quenching factors</strong>
-        <span>Studied the tensions among three coherent neutrino scattering cross-section experiments and showed how
-        the uncertainty in the nuclear-recoil quenching factor can mimic signals of BSM physics.</span></div></div>
-    <div class="entry"><div class="when">Sep 2022 – Dec 2024</div>
-      <div class="what"><strong>Heavy neutral lepton decay</strong>
-        <span>Calculated the decay width of a heavy neutral lepton including the interference between charged- and
-        neutral-current channels, estimated the sensitivity of future experiments and placed world-leading
-        limits.</span></div></div>
   </section>
 
   <!-- ===================== Publications ===================== -->
@@ -329,7 +339,9 @@ of neutrino mass.</p>
   (function () {
     var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
     var ids = tabs.map(function (t) { return t.getAttribute('aria-controls'); });
+    var aliases = { research: 'home' };      // the old "Research interests" tab
     function show(id, focus) {
+      id = aliases[id] || id;
       if (ids.indexOf(id) < 0) id = ids[0];
       tabs.forEach(function (t) {
         var on = t.getAttribute('aria-controls') === id;
