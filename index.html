@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Name · Homepage</title>
+<meta name="description" content="Personal homepage: CV, research interests, publications and side projects.">
+<link rel="icon" href="assets/professor-cat-sit.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8f4ee;
+    --card: #fffdf9;
+    --ink: #2f2925;
+    --muted: #6f655d;
+    --line: #e6ddd2;
+    --accent: #8a6a52;      /* warm taupe, like the cat's legs */
+    --accent-ink: #fffaf3;
+    --tan: #e9d7c2;
+    --todo-bg: #fff4d6;
+    --todo-ink: #7a5a12;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1d1a18; --card: #26221f; --ink: #f1e9df; --muted: #b6aa9d;
+      --line: #3a342f; --accent: #c9a887; --accent-ink: #1d1a18; --tan: #3b3029;
+      --todo-bg: #3a3020; --todo-ink: #f0d38b;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1d1a18; --card: #26221f; --ink: #f1e9df; --muted: #b6aa9d;
+    --line: #3a342f; --accent: #c9a887; --accent-ink: #1d1a18; --tan: #3b3029;
+    --todo-bg: #3a3020; --todo-ink: #f0d38b;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+
+  /* ---------- header ---------- */
+  header { padding: 56px 0 24px; }
+  .who { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .avatar {
+    width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
+    border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--line);
+  }
+  h1 {
+    font-family: Fraunces, Georgia, serif; font-weight: 650; font-size: 2.3rem;
+    line-height: 1.15; margin: 0;
+  }
+  .tagline { margin: 4px 0 10px; color: var(--muted); }
+  .links { display: flex; gap: 14px; flex-wrap: wrap; font-size: .95rem; }
+
+  /* ---------- tabs ---------- */
+  nav[role="tablist"] {
+    display: flex; flex-wrap: wrap; gap: 0 4px; border-bottom: 1px solid var(--line);
+    margin-top: 8px;
+  }
+  @media (max-width: 480px) { [role="tab"] { padding: 10px 10px; } }
+  [role="tab"] {
+    appearance: none; background: none; border: 0; cursor: pointer;
+    font: 500 .98rem Inter, system-ui, sans-serif; color: var(--muted);
+    padding: 12px 14px; border-bottom: 2px solid transparent; white-space: nowrap;
+  }
+  [role="tab"]:hover { color: var(--ink); }
+  [role="tab"][aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  [role="tab"]:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 6px; }
+
+  main { padding: 32px 0 64px; }
+  .js [role="tabpanel"][hidden] { display: none; }
+  h2 { font-family: Fraunces, Georgia, serif; font-weight: 650; font-size: 1.5rem; margin: 0 0 16px; }
+  h3 { font-size: 1.05rem; margin: 28px 0 8px; }
+  section + section { margin-top: 8px; }
+
+  .todo {
+    background: var(--todo-bg); color: var(--todo-ink); border-radius: 4px;
+    padding: 0 4px; font-style: normal;
+  }
+  .note {
+    font-size: .9rem; color: var(--todo-ink); background: var(--todo-bg);
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 24px;
+  }
+
+  /* timeline-ish entries for CV */
+  .entry { display: grid; grid-template-columns: 120px 1fr; gap: 4px 20px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .entry:first-of-type { border-top: 0; }
+  .when { color: var(--muted); font-size: .92rem; }
+  .what strong { display: block; }
+  .what span { color: var(--muted); }
+  @media (max-width: 560px) { .entry { grid-template-columns: 1fr; } }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: .92rem;
+    padding: 9px 14px; border-radius: 8px;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
+  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
+  .chips li { background: var(--tan); border-radius: 999px; padding: 4px 12px; font-size: .92rem; }
+
+  ol.pubs { padding-left: 1.3em; margin: 0; }
+  ol.pubs li { padding: 8px 0; }
+  .venue { color: var(--muted); font-style: italic; }
+
+  /* ---------- project card ---------- */
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 24px; display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: center;
+  }
+  .card img { width: 100%; height: auto; display: block; }
+  .card h3 { margin-top: 0; font-family: Fraunces, Georgia, serif; font-size: 1.35rem; }
+  .card p { margin: 0 0 14px; }
+  .dl { display: grid; gap: 10px; margin-top: 6px; }
+  .dl-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .dl-row .os { width: 100%; font-size: .85rem; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+  .small { font-size: .85rem; color: var(--muted); margin-top: 14px; }
+  @media (max-width: 640px) { .card { grid-template-columns: 1fr; } .card img { max-width: 260px; margin: 0 auto; } }
+
+  footer { border-top: 1px solid var(--line); padding: 20px 0 40px; color: var(--muted); font-size: .85rem; }
+</style>
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+<header class="wrap">
+  <div class="who">
+    <img class="avatar" src="https://avatars.githubusercontent.com/u/33566110?v=4" alt="Profile photo">
+    <div>
+      <h1><span class="todo">Your Name</span></h1>
+      <p class="tagline"><span class="todo">Position · Department · University</span></p>
+      <div class="links">
+        <a href="https://github.com/yunyu97">GitHub</a>
+        <a href="#"><span class="todo">Google Scholar</span></a>
+        <a href="#"><span class="todo">ORCID</span></a>
+        <a href="#"><span class="todo">Email</span></a>
+      </div>
+    </div>
+  </div>
+
+  <nav role="tablist" aria-label="Sections">
+    <button role="tab" id="tab-cv" aria-controls="cv" aria-selected="true">CV</button>
+    <button role="tab" id="tab-research" aria-controls="research" aria-selected="false" tabindex="-1">Research interests</button>
+    <button role="tab" id="tab-publications" aria-controls="publications" aria-selected="false" tabindex="-1">Publications</button>
+    <button role="tab" id="tab-more" aria-controls="more" aria-selected="false" tabindex="-1">Additional stuff</button>
+  </nav>
+</header>
+
+<main class="wrap">
+  <p class="note">Highlighted text is placeholder content — replace it in <code>index.html</code>.</p>
+
+  <!-- ===================== CV ===================== -->
+  <section role="tabpanel" id="cv" aria-labelledby="tab-cv">
+    <h2>Curriculum vitae</h2>
+    <p><a class="btn ghost" href="#"><span>Download full CV (PDF)</span></a> <span class="todo">add cv.pdf to the repo and link it here</span></p>
+
+    <h3>Education</h3>
+    <div class="entry"><div class="when"><span class="todo">20XX – present</span></div>
+      <div class="what"><strong class="todo">Ph.D. in Field</strong><span class="todo">University · Advisor: Name</span></div></div>
+    <div class="entry"><div class="when"><span class="todo">20XX – 20XX</span></div>
+      <div class="what"><strong class="todo">M.S. / B.S. in Field</strong><span class="todo">University</span></div></div>
+
+    <h3>Experience</h3>
+    <div class="entry"><div class="when"><span class="todo">20XX – 20XX</span></div>
+      <div class="what"><strong class="todo">Role</strong><span class="todo">Lab / Company · one-line description</span></div></div>
+
+    <h3>Awards &amp; honors</h3>
+    <div class="entry"><div class="when"><span class="todo">20XX</span></div>
+      <div class="what"><strong class="todo">Award name</strong><span class="todo">Awarding body</span></div></div>
+
+    <h3>Skills</h3>
+    <ul class="chips"><li class="todo">Skill</li><li class="todo">Skill</li><li class="todo">Skill</li><li>Python</li></ul>
+  </section>
+
+  <!-- ===================== Research ===================== -->
+  <section role="tabpanel" id="research" aria-labelledby="tab-research" hidden>
+    <h2>Research interests</h2>
+    <p><span class="todo">Two or three sentences on the big question your research addresses and why it matters.</span></p>
+    <ul class="chips" style="margin-bottom:8px">
+      <li class="todo">Topic one</li><li class="todo">Topic two</li><li class="todo">Topic three</li>
+    </ul>
+    <h3 class="todo">Current project</h3>
+    <p><span class="todo">What you are working on now, the methods you use, and what you have found so far.</span></p>
+    <h3 class="todo">Earlier work</h3>
+    <p><span class="todo">A short paragraph on previous projects.</span></p>
+  </section>
+
+  <!-- ===================== Publications ===================== -->
+  <section role="tabpanel" id="publications" aria-labelledby="tab-publications" hidden>
+    <h2>Publications</h2>
+    <h3>Journal articles</h3>
+    <ol class="pubs" reversed>
+      <li><span class="todo"><b>Your Name</b>, Coauthor A., Coauthor B. “Title of the paper.”</span> <span class="venue todo">Journal Name</span>, <span class="todo">vol(issue), pages, Year.</span> <a href="#">[DOI]</a> <a href="#">[PDF]</a></li>
+      <li><span class="todo">Coauthor A., <b>Your Name</b>. “Title of the paper.”</span> <span class="venue todo">Journal Name</span>, <span class="todo">Year.</span> <a href="#">[DOI]</a></li>
+    </ol>
+    <h3>Conference papers &amp; talks</h3>
+    <ol class="pubs" reversed>
+      <li><span class="todo"><b>Your Name</b>, et al. “Title.”</span> <span class="venue todo">Conference Name</span>, <span class="todo">City, Year.</span></li>
+    </ol>
+  </section>
+
+  <!-- ===================== Additional stuff ===================== -->
+  <section role="tabpanel" id="more" aria-labelledby="tab-more" hidden>
+    <h2>Additional stuff</h2>
+
+    <article class="card" aria-labelledby="cat-title">
+      <img src="assets/professor-cat.png" width="366" height="311" alt="Professor Cat, a watercolor tabby cat, walking">
+      <div>
+        <h3 id="cat-title">Professor Cat — desktop Pomodoro cat</h3>
+        <p>A watercolor tabby that lives on your desktop: it walks, sits, grooms and naps, keeps your
+          Pomodoro timer, plays music while you work, and reminds you to rest. Double-click it to start the
+          timer; right-click for presets and music.</p>
+        <div class="dl">
+          <div class="dl-row"><span class="os">Windows</span>
+            <a class="btn" href="https://github.com/yunyu97/professor-cat-desktop-pet/releases/latest/download/ProfessorCatLife-windows.zip">Life edition</a>
+            <a class="btn ghost" href="https://github.com/yunyu97/professor-cat-desktop-pet/releases/latest/download/ProfessorCatStudy-windows.zip">Study edition</a>
+          </div>
+          <div class="dl-row"><span class="os">macOS (Apple Silicon)</span>
+            <a class="btn" href="https://github.com/yunyu97/professor-cat-desktop-pet/releases/latest/download/ProfessorCatLife-mac-apple-silicon.zip">Life edition</a>
+            <a class="btn ghost" href="https://github.com/yunyu97/professor-cat-desktop-pet/releases/latest/download/ProfessorCatStudy-mac-apple-silicon.zip">Study edition</a>
+          </div>
+        </div>
+        <p class="small">Life comes with a default playlist; Study lets you add your own YouTube playlist.
+          Windows: unzip and run the <code>.exe</code> (keep the <code>_internal</code> folder next to it).
+          Mac: right-click the app → <b>Open</b> the first time.
+          <a href="https://github.com/yunyu97/professor-cat-desktop-pet">Source &amp; all releases</a></p>
+      </div>
+    </article>
+  </section>
+</main>
+
+<footer class="wrap">© <span id="year">2026</span> <span class="todo">Your Name</span> · Built with plain HTML, hosted on GitHub Pages.</footer>
+
+<script>
+  (function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    var ids = tabs.map(function (t) { return t.getAttribute('aria-controls'); });
+    function show(id, focus) {
+      if (ids.indexOf(id) < 0) id = ids[0];
+      tabs.forEach(function (t) {
+        var on = t.getAttribute('aria-controls') === id;
+        t.setAttribute('aria-selected', on);
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        if (on && focus) t.focus();
+      });
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { history.replaceState(null, '', '#' + ids[i]); show(ids[i]); });
+      t.addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        var j = (i + d + tabs.length) % tabs.length;
+        history.replaceState(null, '', '#' + ids[j]); show(ids[j], true);
+      });
+    });
+    // the section ids double as tab links (#publications etc.); keep the header in view
+    // instead of letting the browser jump to the section
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    function fromHash() { show(location.hash.slice(1)); window.scrollTo(0, 0); }
+    window.addEventListener('hashchange', fromHash);
+    window.addEventListener('load', function () { window.scrollTo(0, 0); });
+    fromHash();
+    document.getElementById('year').textContent = new Date().getFullYear();
+  })();
+</script>
+</body>
+</html>
