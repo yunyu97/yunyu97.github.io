@@ -125,11 +125,14 @@
   .pubs li { padding: 8px 0; }
   .venue { font-style: italic; }
 
-  /* ---------- Professor Cat card ---------- */
-  .card { display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: center; }
-  .card img { width: 100%; height: auto; display: block; }
-  .card h3 { margin-top: 0; font-size: 1.3rem; }
-  .card p { margin: 0 0 14px; }
+  /* ---------- app cards: demo video on the left, description + downloads on the right ---------- */
+  .app { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: center; }
+  .app + .app { margin-top: 36px; padding-top: 32px; border-top: 1px solid var(--soft); }
+  .app h3 { margin-top: 0; font-size: 1.3rem; }
+  .app p { margin: 0 0 14px; }
+  .demo { margin: 0; }
+  .demo video { display: block; width: 100%; height: auto; border-radius: 12px; background: var(--soft); box-shadow: var(--shadow); }
+  .demo figcaption { font-size: .85rem; margin-top: 8px; text-align: center; }
   .dl { display: grid; gap: 12px; margin-top: 6px; }
   .dl-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .dl-row .os { width: 100%; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
@@ -140,14 +143,7 @@
   .btn.ghost { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
   .btn:focus-visible { outline: 2px solid var(--heading); outline-offset: 2px; }
   .small { font-size: .85rem; margin-top: 16px; }
-  .bunny-card { margin-top: 28px; }
-  .bunny-pics { display: flex; align-items: flex-end; justify-content: center; gap: 6px; }
-  .bunny-pics img:first-child { width: 42%; height: auto; }
-  .bunny-pics img:last-child { width: 58%; height: auto; }
-  .demo { margin: 28px 0 0; }
-  .demo video { display: block; width: 100%; height: auto; border-radius: 12px; background: var(--soft); box-shadow: var(--shadow); }
-  .demo figcaption { font-size: .85rem; margin-top: 8px; text-align: center; }
-  @media (max-width: 640px) { .card { grid-template-columns: 1fr; } .card img { max-width: 240px; margin: 0 auto; } }
+  @media (max-width: 860px) { .app { grid-template-columns: 1fr; } }
 
   /* ---------- wave footer ---------- */
   footer { position: relative; margin-top: 24px; color: #fff; text-align: center; font-size: .85rem; }
@@ -338,8 +334,15 @@
   <section role="tabpanel" id="more" aria-labelledby="tab-more" class="panel" hidden>
     <h2>Additional stuff</h2>
 
-    <article class="card" aria-labelledby="cat-title">
-      <img src="assets/professor-cat.png" width="366" height="311" alt="Professor Cat, a watercolor tabby cat, walking">
+    <article class="app" aria-labelledby="cat-title">
+      <figure class="demo">
+        <video controls muted playsinline preload="metadata" width="1920" height="1080"
+               poster="assets/professor-cat-demo-poster.jpg">
+          <source src="assets/professor-cat-demo.mp4" type="video/mp4">
+          <a href="assets/professor-cat-demo.mp4">Watch the one-minute demo (MP4)</a>
+        </video>
+        <figcaption>One-minute demo (no sound).</figcaption>
+      </figure>
       <div>
         <h3 id="cat-title">Professor Cat — desktop Pomodoro cat</h3>
         <p>A watercolor tabby that lives on your desktop: it walks, sits, grooms and naps, keeps your
@@ -364,20 +367,16 @@
       </div>
     </article>
 
-    <figure class="demo">
-      <video controls muted playsinline preload="metadata" width="1920" height="1080"
-             poster="assets/professor-cat-demo-poster.jpg">
-        <source src="assets/professor-cat-demo.mp4" type="video/mp4">
-        <a href="assets/professor-cat-demo.mp4">Watch the one-minute demo (MP4)</a>
-      </video>
-      <figcaption>One-minute demo of every feature (no sound).</figcaption>
-    </figure>
 
-    <article class="card bunny-card" aria-labelledby="bunny-title">
-      <div class="bunny-pics">
-        <img src="assets/study-bunny.png" width="179" height="360" alt="Study Bunny, a white bunny in a fluffy half-zip sweater and jeans">
-        <img src="assets/study-bunny-hop.png" width="280" height="220" alt="Study Bunny hopping, paws held at her chest">
-      </div>
+    <article class="app" aria-labelledby="bunny-title">
+      <figure class="demo">
+        <video controls muted playsinline preload="metadata" width="1920" height="1080"
+               poster="assets/study-bunny-demo-poster.jpg">
+          <source src="assets/study-bunny-demo.mp4" type="video/mp4">
+          <a href="assets/study-bunny-demo.mp4">Watch the 30-second demo (MP4)</a>
+        </video>
+        <figcaption>30-second demo (no sound).</figcaption>
+      </figure>
       <div>
         <h3 id="bunny-title">Study Bunny — interactive desktop pet</h3>
         <p>A bunny that hops along your taskbar and keeps a 25 / 5 Pomodoro timer. Pet her head and hearts
