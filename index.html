@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dr. Yulun Li · Homepage</title>
 <meta name="description" content="Yulun Li — neutrino phenomenology, Virginia Tech. CV, research interests, publications and side projects.">
-<link rel="icon" href="assets/professor-cat-sit.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -138,6 +140,10 @@
   .btn.ghost { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
   .btn:focus-visible { outline: 2px solid var(--heading); outline-offset: 2px; }
   .small { font-size: .85rem; margin-top: 16px; }
+  .bunny-card { margin-top: 28px; }
+  .bunny-pics { display: flex; align-items: flex-end; justify-content: center; gap: 6px; }
+  .bunny-pics img:first-child { width: 42%; height: auto; }
+  .bunny-pics img:last-child { width: 58%; height: auto; }
   .demo { margin: 28px 0 0; }
   .demo video { display: block; width: 100%; height: auto; border-radius: 12px; background: var(--soft); box-shadow: var(--shadow); }
   .demo figcaption { font-size: .85rem; margin-top: 8px; text-align: center; }
@@ -366,6 +372,32 @@
       </video>
       <figcaption>One-minute demo of every feature (no sound).</figcaption>
     </figure>
+
+    <article class="card bunny-card" aria-labelledby="bunny-title">
+      <div class="bunny-pics">
+        <img src="assets/study-bunny.png" width="179" height="360" alt="Study Bunny, a white bunny in a fluffy half-zip sweater and jeans">
+        <img src="assets/study-bunny-hop.png" width="280" height="220" alt="Study Bunny hopping, paws held at her chest">
+      </div>
+      <div>
+        <h3 id="bunny-title">Study Bunny — interactive desktop pet</h3>
+        <p>A bunny that hops along your taskbar and keeps a 25 / 5 Pomodoro timer. Pet her head and hearts
+          float up, click to make her jump, feed her the carrots you earn for each finished session, and
+          after two hours of study she says <i>“I need some rest now!”</i> and naps in a rabbit hole.</p>
+        <div class="dl">
+          <div class="dl-row"><span class="os">Windows</span>
+            <a class="btn" href="https://github.com/yunyu97/study-bunny/releases/latest/download/StudyBunny-windows.zip">Download</a>
+          </div>
+          <div class="dl-row"><span class="os">macOS</span>
+            <a class="btn" href="https://github.com/yunyu97/study-bunny/releases/latest/download/StudyBunny-mac-apple-silicon.zip">Apple Silicon (M1–M4)</a>
+            <a class="btn ghost" href="https://github.com/yunyu97/study-bunny/releases/latest/download/StudyBunny-mac-intel.zip">Intel</a>
+          </div>
+        </div>
+        <p class="small">Double-click her to start the timer; right-click for the menu.
+          Windows: unzip and run <code>StudyBunny.exe</code> (keep the <code>_internal</code> folder next to it).
+          Mac: if macOS says it can’t check the app, click <b>OK</b>, then <b>System Settings › Privacy &amp; Security</b>
+          → <b>Open Anyway</b>. <a href="https://github.com/yunyu97/study-bunny">Source &amp; releases</a></p>
+      </div>
+    </article>
   </section>
 </main>
 
