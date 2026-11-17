@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-assisted muon-collider simulation · demo</title>
+<meta name="description" content="Interactive demo of a precision-verified muon-collider simulation prototype: cross sections, neutrino flux from muon decay, and a live floating-point precision lab.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#ffffff; --soft:#f6f8fb; --card:#ffffff; --text:#67748e; --heading:#344767; --line:#e9ecef;
+    --grad-a:#0f4c81; --grad-b:#13a3a3; --grad:linear-gradient(310deg,var(--grad-b),var(--grad-a));
+    --accent:#0f6f8f; --chip:#eef4f8; --good:#1b8a5a; --warn:#b7791f; --bad:#c53030;
+    --shadow:0 4px 6px -1px rgba(20,20,20,.12),0 2px 4px -1px rgba(20,20,20,.07);
+    --c1:#0f4c81; --c2:#D55E00; --c3:#13a3a3; --c4:#444444;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#10151f; --soft:#151c28; --card:#1a2230; --text:#a9b4c7; --heading:#e6ecf5; --line:#2a3447;
+            --chip:#1f2a3b; --accent:#5fc2dc; --good:#4cc38a; --warn:#e0b050; --bad:#f08080;
+            --c1:#6cb4ee; --c2:#f0a060; --c3:#4fd1c5; --c4:#c8d0dc; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Open Sans',system-ui,sans-serif; color:var(--text); background:var(--bg); line-height:1.6; }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 16px 56px; }
+  header.hero { background:var(--grad); color:#fff; padding:34px 16px 30px; }
+  header.hero .wrap { padding-bottom:0; }
+  header.hero h1 { margin:6px 0 6px; font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.2; }
+  header.hero p { margin:0; max-width:760px; opacity:.95; }
+  header.hero a { color:#fff; text-decoration:underline; }
+  h2 { color:var(--heading); margin:40px 0 6px; font-size:1.45rem; }
+  h3 { color:var(--heading); margin:20px 0 8px; font-size:1.05rem; }
+  .lead { margin:0 0 14px; max-width:820px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); padding:16px; }
+  video { width:100%; border-radius:12px; border:1px solid var(--line); background:#000; display:block; }
+  .controls { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px 20px; }
+  .ctl label { display:flex; justify-content:space-between; font-size:.85rem; color:var(--heading); font-weight:600; }
+  .ctl output { font-weight:700; color:var(--accent); }
+  input[type=range] { width:100%; accent-color:var(--grad-a); }
+  select, input[type=number], button { font:inherit; padding:6px 10px; border-radius:8px; border:1px solid var(--line);
+      background:var(--card); color:var(--heading); }
+  button { cursor:pointer; background:var(--grad-a); color:#fff; border-color:transparent; font-weight:600; }
+  button.ghost { background:var(--chip); color:var(--heading); }
+  button:disabled { opacity:.5; cursor:default; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin:14px 0; }
+  .stat { background:var(--soft); border-radius:10px; padding:10px 12px; border:1px solid var(--line); }
+  .stat b { display:block; font-size:1.15rem; color:var(--heading); }
+  .stat span { font-size:.78rem; }
+  .charts { display:grid; grid-template-columns:repeat(auto-fit,minmax(440px,1fr)); gap:14px; }
+  @media (max-width:520px){ .charts{ grid-template-columns:1fr; } }
+  .chartbox { position:relative; height:320px; }
+  table { border-collapse:collapse; width:100%; font-size:.86rem; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--heading); font-weight:700; background:var(--soft); position:sticky; top:0; }
+  td.num { font-variant-numeric:tabular-nums; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.82rem; white-space:nowrap; }
+  .good { color:var(--good); font-weight:700; } .warn { color:var(--warn); font-weight:700; } .bad { color:var(--bad); font-weight:700; }
+  .tablewrap { overflow-x:auto; border:1px solid var(--line); border-radius:10px; }
+  .scroll { max-height:420px; overflow:auto; }
+  .note { font-size:.84rem; border-left:4px solid var(--grad-b); background:var(--soft); padding:8px 12px; border-radius:0 8px 8px 0; margin:12px 0; }
+  .badge { display:inline-block; padding:1px 8px; border-radius:99px; font-size:.75rem; font-weight:700; background:var(--chip); color:var(--heading); }
+  details { margin:8px 0; } summary { cursor:pointer; color:var(--heading); font-weight:600; }
+  footer { color:var(--text); font-size:.82rem; border-top:1px solid var(--line); margin-top:40px; padding-top:14px; }
+  .row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:10px 0; }
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <a href="../">&larr; Dr. Yulun Li · Homepage</a>
+  <h1>AI-assisted muon-collider simulation</h1>
+  <p>A small but complete AI-for-physics prototype: parameters &rarr; physics programs &rarr; kinematic distributions &rarr;
+     high-precision verification &rarr; AI-written report, with every claim quantified. Everything interactive below runs in your browser.</p>
+</div></header>
+
+<div class="wrap">
+
+<h2>1. Overview video</h2>
+<p class="lead">A 48-second captioned tour, rendered from the real results (silent): the workflow, why precision matters at TeV energies,
+  convergence of the samplers to analytic results and to Pythia&nbsp;8, and the verification tallies.</p>
+<video controls preload="metadata" poster="media/poster.png" playsinline>
+  <source src="media/demo.mp4" type="video/mp4">
+  Your browser does not support embedded video. <a href="media/demo.mp4">Download the video</a>.
+</video>
+
+<h2>2. Interactive simulation</h2>
+<p class="lead">Choose the collision energy and electroweak inputs. The cross sections, distributions and neutrino flux below are computed live
+  (tree level, massless final-state fermions, unpolarised beams).</p>
+<div class="card">
+  <div class="controls">
+    <div class="ctl"><label><span>&radic;s</span> <output id="o_tev"></output></label><input id="tev" type="range" min="-0.7" max="2" step="0.01" value="1"></div>
+    <div class="ctl"><label><span>M<sub>Z</sub> [GeV]</span> <output id="o_mz"></output></label><input id="mz" type="range" min="60" max="400" step="0.0001" value="91.1876"></div>
+    <div class="ctl"><label><span>&Gamma;<sub>Z</sub> [GeV]</span> <output id="o_gz"></output></label><input id="gz" type="range" min="0.5" max="40" step="0.0001" value="2.4952"></div>
+    <div class="ctl"><label><span>sin&sup2;&theta;<sub>eff</sub></span> <output id="o_sw"></output></label><input id="sw" type="range" min="0.15" max="0.35" step="0.0005" value="0.2315"></div>
+    <div class="ctl"><label><span>&theta;<sub>min</sub> for &mu;&mu;&rarr;&mu;&mu; [rad]</span> <output id="o_th"></output></label><input id="thmin" type="range" min="0.01" max="0.5" step="0.005" value="0.1"></div>
+    <div class="ctl"><label>final state f in &mu;&mu;&rarr;f f&#772;</label>
+      <select id="fin"><option value="e">e</option><option value="tau">&tau;</option><option value="u">u</option><option value="d">d</option><option value="s">s</option><option value="c">c</option><option value="b">b</option></select></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="s_sig">–</b><span>&sigma;(&mu;&mu;&rarr;f f&#772;) [pb]</span></div>
+    <div class="stat"><b id="s_afb">–</b><span>forward-backward asymmetry</span></div>
+    <div class="stat"><b id="s_bh">–</b><span>&sigma;(&mu;&mu;&rarr;&mu;&mu;, &theta;&gt;&theta;<sub>min</sub>) [pb]</span></div>
+    <div class="stat"><b id="s_int">–</b><span>s&ndash;t interference effect on that</span></div>
+    <div class="stat"><b id="s_g">–</b><span>muon Lorentz factor &gamma;</span></div>
+    <div class="stat"><b id="s_omb">–</b><span>1 &minus; &beta; (stable formula)</span></div>
+  </div>
+  <div class="row">
+    <button id="gen">Generate events in the browser</button>
+    <label>N = <select id="nev"><option>10000</option><option selected>50000</option><option>200000</option></select></label>
+    <span id="genmsg" class="badge">analytic only</span>
+    <label style="margin-left:auto"><input type="checkbox" id="pyth" checked> overlay Pythia&nbsp;8</label>
+  </div>
+  <div class="charts">
+    <div class="card"><h3>cos&theta; of f &nbsp;(normalised)</h3><div class="chartbox"><canvas id="chA"></canvas></div></div>
+    <div class="card"><h3>&mu;&mu;&rarr;&mu;&mu; vs scattering angle</h3><div class="chartbox"><canvas id="chC"></canvas></div></div>
+    <div class="card"><h3>&nu;<sub>&mu;</sub> energy fraction from muon decay</h3><div class="chartbox"><canvas id="chB1"></canvas></div></div>
+    <div class="card"><h3>&nu;<sub>&mu;</sub> angle: &theta;&middot;&gamma;</h3><div class="chartbox"><canvas id="chB2"></canvas></div></div>
+  </div>
+  <div class="note" id="pynote"></div>
+</div>
+
+<h2>3. Precision lab: why naive formulas fail at TeV energies</h2>
+<p class="lead">Each quantity is computed live as naive float32, naive float64 and stable float64, and compared with an 80-digit reference
+  (decimal.js). The beam energy follows the &radic;s slider above. At 10&nbsp;TeV the muon mass is only 10<sup>&minus;5</sup> of the energy.</p>
+<div class="card">
+  <div class="controls">
+    <div class="ctl"><label><span>distance of cos&theta;* from the endpoint, log<sub>10</sub></span> <output id="o_eps"></output></label>
+      <input id="eps" type="range" min="-13" max="0" step="0.1" value="-6"></div>
+    <div class="ctl"><label>which endpoint is approached</label>
+      <select id="side"><option value="bwd">cos&theta;* &rarr; &minus;1 (backward in the muon rest frame)</option><option value="fwd">cos&theta;* &rarr; +1 (forward)</option></select></div>
+  </div>
+  <div class="tablewrap" style="margin-top:12px"><table id="plab"></table></div>
+  <div class="note">Relative error colours: <span class="good">&lt; 1e-12</span>, <span class="warn">&lt; 1e-6</span>, <span class="bad">worse</span>;
+    an error of 1 means no correct digit. The reference is computed from the same double-precision inputs, converted via their shortest decimal
+    representation, so the stable results show ~1e-16 from input rounding alone. Float32 is emulated with <code>Math.fround</code> after every operation.</div>
+  <h3>Precomputed stress scan (from the Python harness, 0.1 &ndash; 1000 TeV)</h3>
+  <div class="row"><select id="kernel"></select><span class="badge" id="stress"></span></div>
+  <div class="chartbox" style="height:300px"><canvas id="chP"></canvas></div>
+</div>
+
+<h2>4. Verification record (Python run at 10 TeV)</h2>
+<p class="lead">These numbers come from the full Python workflow, not from the JavaScript above.</p>
+<div class="stats" id="vstats"></div>
+<details open><summary>All checks</summary><div class="tablewrap scroll"><table id="vchecks"></table></div></details>
+<details><summary>Mutation testing: does the suite catch injected bugs?</summary><div class="tablewrap"><table id="vmut"></table></div></details>
+<details><summary>ML surrogate for d&sigma;/dcos&theta;</summary><div class="tablewrap"><table id="vsur"></table></div></details>
+<details><summary>Verification-gated code generation (scripted drafts, not an LLM)</summary><div class="tablewrap"><table id="vgate"></table></div></details>
+<details><summary>Defects found while building the tool with AI assistance</summary><div class="tablewrap"><table id="vdev"></table></div></details>
+
+<h2>Scope and honest limits</h2>
+<div class="note">
+  Tree level, fixed couplings, massless final-state fermions, unpolarised beams, no ISR or beam-energy spread; quark channels are leading order.
+  Neutrino fluxes are the primary neutrinos from beam-muon decay; hadronic secondaries are not modelled.
+  Pythia&nbsp;8 has no s&ndash;t interference for &mu;&mu;&rarr;&mu;&mu;, so that comparison covers the t-channel only.
+  The surrogate is slower than the closed form it emulates, so no speed-up is claimed.
+  AI-versus-human development time has not been measured. The report analyst shown in the Python tool is rule-based by default.
+  The JavaScript on this page is a re-implementation of the Python formulas for display; the Python package is the reference.
+</div>
+
+<footer>Prototype by Yulun Li. Reference tools: Pythia&nbsp;8.318, mpmath (80 digits), decimal.js and Chart.js in this page.
+  Data in <code>data/demo_data.json</code>.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
+<script src="physics.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
