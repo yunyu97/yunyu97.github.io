@@ -16,16 +16,28 @@
     const d = s - p.mz * p.mz, w = p.mz * p.gz, den = d * d + w * w;
     return [s * d / den, -s * w / den];
   }
-  function ffSums(s, init, fin, p) {
+  const FMASS = { e: 0.00051099895, mu: MMU, tau: 1.77686 };      // quarks: massless (not modelled)
+  function betaF(s, fin, useMass = true) { const m = useMass ? (FMASS[fin] || 0) : 0; return m ? Math.sqrt(Math.max(1 - 4 * m * m / s, 0)) : 1; }
+  /* d sigma/dcos = K*beta*(a0 + a1 c + a2 c^2), vector/axial decomposition (see processes.ff_poly) */
+  function ffPoly(s, init, fin, p, useMass = true) {
     const [gLi, gRi, Qi] = coup(init, p), [gLf, gRf, Qf, Nc] = coup(fin, p), [cr, ci] = chi(s, p);
-    const A2 = (gi, gf) => { const re = Qi * Qf + gi * gf * cr, im = gi * gf * ci; return re * re + im * im; };
-    return { same: A2(gLi, gLf) + A2(gRi, gRf), opp: A2(gLi, gRf) + A2(gRi, gLf), Nc };
+    const gV = 0.5 * (gLf + gRf), gA = 0.5 * (gLf - gRf), b = betaF(s, fin, useMass);
+    let a0 = 0, a1 = 0, a2 = 0;
+    for (const [g, sh] of [[gLi, 1], [gRi, -1]]) {
+      const Vr = Qi * Qf + g * gV * cr, Vi = g * gV * ci, Ar = g * gA * cr, Ai = g * gA * ci;
+      const v2 = Vr * Vr + Vi * Vi, a2_ = Ar * Ar + Ai * Ai;
+      a0 += 2 * (v2 * (2 - b * b) + a2_ * b * b);
+      a2 += 2 * b * b * (v2 + a2_);
+      a1 += 8 * sh * b * (Vr * Ar + Vi * Ai);
+    }
+    return { a0, a1, a2, Nc, b };
   }
-  const sigmaFF = (s, fin, p, init = 'mu') => { const q = ffSums(s, init, fin, p);
-    return GEV2PB * q.Nc * PI * p.alpha ** 2 / (3 * s) * (q.same + q.opp); };
-  const afbFF = (s, fin, p, init = 'mu') => { const q = ffSums(s, init, fin, p); return 0.75 * (q.same - q.opp) / (q.same + q.opp); };
-  const dsFF = (s, opc, omc, fin, p, init = 'mu') => { const q = ffSums(s, init, fin, p);
-    return GEV2PB * q.Nc * PI * p.alpha ** 2 / (8 * s) * (q.same * opc * opc + q.opp * omc * omc); };
+  const K_FF = (s, p, Nc, b) => GEV2PB * Nc * PI * p.alpha ** 2 * b / (8 * s);
+  const sigmaFF = (s, fin, p, init = 'mu', useMass = true) => { const q = ffPoly(s, init, fin, p, useMass);
+    return K_FF(s, p, q.Nc, q.b) * (2 * q.a0 + 2 * q.a2 / 3); };
+  const afbFF = (s, fin, p, init = 'mu', useMass = true) => { const q = ffPoly(s, init, fin, p, useMass); return q.a1 / (2 * q.a0 + 2 * q.a2 / 3); };
+  const dsFF = (s, opc, omc, fin, p, init = 'mu', useMass = true) => { const q = ffPoly(s, init, fin, p, useMass), c = 0.5 * (opc - omc);
+    return K_FF(s, p, q.Nc, q.b) * (q.a0 + q.a1 * c + q.a2 * c * c); };
 
   function dsBhabha(s, opc, omc, p, mode = 'full') {
     const [gL, gR, Q] = coup('mu', p);
@@ -75,13 +87,10 @@
     }
     return { y, tg };
   }
-  function sampleFF(s, n, fin, p) {                      // exact inversion sampling of cos(theta)
-    const q = ffSums(s, 'mu', fin, p), ps = q.same / (q.same + q.opp), c = new Float64Array(n);
-    for (let i = 0; i < n; i++) {
-      const r = Math.random(), cb = Math.cbrt(r), big = 2 * cb, small = 2 * (1 - r) / (1 + cb + cb * cb);
-      const same = Math.random() < ps, opc = same ? big : small, omc = same ? small : big;
-      c[i] = opc < omc ? opc - 1 : 1 - omc;
-    }
+  function sampleFF(s, n, fin, p) {                      // accept-reject on a0 + a1 c + a2 c^2 >= 0
+    const q = ffPoly(s, 'mu', fin, p), env = q.a0 + Math.abs(q.a1) + q.a2, c = new Float64Array(n);
+    let i = 0;
+    while (i < n) { const x = 2 * Math.random() - 1; if (Math.random() * env < q.a0 + q.a1 * x + q.a2 * x * x) c[i++] = x; }
     return c;
   }
 
@@ -133,5 +142,5 @@
     return Math.min(e, 1);
   }
 
-  root.MUC = { DEFAULT, MMU, FERM, sigmaFF, afbFF, dsFF, dsBhabha, sigmaBhabha, labPdf, coneFrac, eEta, sampleNu, sampleFF, kernels, relErr };
+  root.MUC = { DEFAULT, MMU, FERM, FMASS, betaF, ffPoly, sigmaFF, afbFF, dsFF, dsBhabha, sigmaBhabha, labPdf, coneFrac, eEta, sampleNu, sampleFF, kernels, relErr };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -5,6 +5,7 @@
   const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   let DATA = null, mc = { c: null, nu: null }, charts = {};
 
+  const FLAB = { e: ['e⁺e⁻', 'e⁻'], tau: ['τ⁺τ⁻', 'τ⁻'], u: ['u ū', 'u'], d: ['d d̄', 'd'], s: ['s s̄', 's'], c: ['c c̄', 'c'], b: ['b b̄', 'b'] };
   const fmtE = (x, d = 3) => (x === 0 ? '0' : x.toExponential(d));
   const fmtG = (x, d = 4) => Number(x.toPrecision(d)).toString();
   const params = () => ({ alpha: M.DEFAULT.alpha, mz: +$('mz').value, gz: +$('gz').value, sw2: M.DEFAULT.sw2, sw2eff: +$('sw').value });
@@ -35,7 +36,7 @@
   function update() {
     const p = params(), sq = sqrtS(), s = sq * sq, fin = $('fin').value, thmin = +$('thmin').value;
     const g = sq / 2 / M.MMU;
-    $('o_tev').textContent = (sq / 1000).toPrecision(3) + ' TeV';
+    $('o_tev').textContent = sq < 1000 ? sq.toPrecision(3) + ' GeV' : (sq / 1000).toPrecision(3) + ' TeV';
     $('o_mz').textContent = (+$('mz').value).toFixed(4); $('o_gz').textContent = (+$('gz').value).toFixed(4);
     $('o_sw').textContent = (+$('sw').value).toFixed(4); $('o_th').textContent = thmin.toFixed(3);
     const bh = M.sigmaBhabha(s, thmin, p, 'full'), bhi = M.sigmaBhabha(s, thmin, p, 'incoherent');
@@ -45,14 +46,29 @@
     $('s_g').textContent = fmtG(g, 5); $('s_omb').textContent = fmtE(r / (1 + Math.sqrt(1 - r)));
 
     // chart A: cos theta
-    const sig = M.sigmaFF(s, fin, p), ana = [];
-    for (let i = 0; i <= 200; i++) { const c = -1 + i / 100; ana.push({ x: c, y: M.dsFF(s, 1 + c, 1 - c, fin, p) / sig }); }
-    const dsA = [line('analytic', ana, css('--c4'))];
-    if (mc.c && mc.cKey === [sq, p.mz, p.gz, p.sw2eff, fin].join()) dsA.push(dots(`browser MC, N = ${mc.c.length.toLocaleString()}`, hist(mc.c, -1, 1, 20), css('--c1')));
+    const [fl, fpart] = FLAB[fin], bf = M.betaF(s, fin), mf = M.FMASS[fin] || 0;
+    const massTxt = mf ? `m = ${mf} GeV, β_f = ${bf.toFixed(4)}` : 'massless quark';
+    const sig = M.sigmaFF(s, fin, p), ana = [], ana0 = [];
+    const sig0 = M.sigmaFF(s, fin, p, 'mu', false);
+    for (let i = 0; i <= 200; i++) { const c = -1 + i / 100; ana.push({ x: c, y: M.dsFF(s, 1 + c, 1 - c, fin, p) / sig });
+      ana0.push({ x: c, y: M.dsFF(s, 1 + c, 1 - c, fin, p, 'mu', false) / sig0 }); }
+    const dsA = [line(`analytic, μ⁺μ⁻ → ${fl} (${massTxt})`, ana, css('--c4'))];
+    if (mf && Math.abs(bf - 1) > 2e-4) dsA.push(line('analytic, massless limit', ana0, css('--c3'), [6, 4]));
+    if (mc.c && mc.cKey === [sq, p.mz, p.gz, p.sw2eff, fin].join()) dsA.push(dots(`browser MC (${fl}), N = ${mc.c.length.toLocaleString()}`, hist(mc.c, -1, 1, 20), css('--c1')));
     const pk = DATA && DATA.pythia.ff_hist, sel = pk && (Math.abs(sq - 1000) < 1 ? '1000' : Math.abs(sq - 10000) < 1 ? '10000' : null);
     const pythOK = sel && fin === 'e' && Math.abs(p.mz - 91.1876) < 1e-6 && Math.abs(p.gz - 2.4952) < 1e-6 && Math.abs(p.sw2eff - 0.2315) < 1e-6;
-    if ($('pyth').checked && pythOK) dsA.push(dots('Pythia 8 (200k events)', histCounts(pk[sel].counts, pk[sel].edges), css('--c2'), 'rect'));
-    mkChart('chA', { datasets: dsA, xt: 'cos θ of f w.r.t. the μ⁻ beam', yt: '(1/σ) dσ/dcosθ', yr: { min: 0 } });
+    if ($('pyth').checked && pythOK) dsA.push(dots('Pythia 8, μ⁺μ⁻ → e⁺e⁻ (200k events)', histCounts(pk[sel].counts, pk[sel].edges), css('--c2'), 'rect'));
+    $('tA').innerHTML = `cosθ of ${fpart} in μ⁺μ⁻ → ${fl} <span class="badge">${massTxt}</span>`;
+    $('l_sig').textContent = `σ(μ⁺μ⁻ → ${fl}) [pb]`;
+    $('s_beta').textContent = mf ? bf.toFixed(6) : '1 (massless)';
+    const dsig = 100 * (sig0 / sig - 1);
+    $('fnote').innerHTML = (fin === 'e' || fin === 'tau')
+      ? `e, μ and τ have identical electroweak couplings, so μ⁺μ⁻ → e⁺e⁻ and μ⁺μ⁻ → τ⁺τ⁻ differ <b>only through the final-state mass</b>. ` +
+        `For ${fl} here, neglecting the mass would change σ by ${dsig.toPrecision(2)} % and A_FB by ${(M.afbFF(s, fin, p, 'mu', false) - M.afbFF(s, fin, p)).toExponential(1)}; ` +
+        `it matters near threshold (see the chart below), not at TeV energies.`
+      : `Quark final states are leading-order partonic estimates with <b>massless quarks and no QCD corrections</b>` +
+        (sq < 200 ? ` <b>— not reliable at this low energy</b> (thresholds, resonances, hadronisation).` : `; they are not compared with Pythia8.`);
+    mkChart('chA', { datasets: dsA, xt: `cos θ of ${fpart} w.r.t. the μ⁻ beam`, yt: '(1/σ) dσ/dcosθ', yr: { min: 0 } });
 
     // chart C: mu mu -> mu mu vs angle
     const full = [], inc = [], thLo = Math.max(thmin, 0.01);
@@ -72,7 +88,7 @@
       dB2.push(dots('Pythia 8 (5 TeV μ)', histCounts(d.theta_gamma_hist, d.theta_gamma_edges).map((q) => q), css('--c2'), 'rect')); }
     mkChart('chB1', { datasets: dB1, xt: 'E_ν / E_μ', yt: 'pdf', yr: { min: 0 } });
     mkChart('chB2', { datasets: dB2, xt: 'θ × γ', yt: 'pdf', yr: { min: 0 } });
-    $('pynote').textContent = pythOK ? 'Pythia 8 overlay for μμ→e e is shown because the parameters match the reference run (1 or 10 TeV, default electroweak inputs).'
+    $('pynote').textContent = pythOK ? 'Pythia 8 overlay for μ⁺μ⁻ → e⁺e⁻ is shown because the parameters match the reference run (1 or 10 TeV, default electroweak inputs).'
       : 'Pythia 8 cross-section histograms exist only for e⁺e⁻ at 1 and 10 TeV with the default electroweak inputs. The neutrino overlay (5 TeV muons) is valid at any energy because the shape depends on θ·γ and E/E_μ only for γ ≫ 1.';
     lab();
   }
@@ -102,6 +118,17 @@
            errCell(M.relErr(r.f32, r.ref, Decimal)) + errCell(M.relErr(r.f64, r.ref, Decimal)) + errCell(M.relErr(r.stable, r.ref, Decimal)) + '</tr>';
     }
     $('plab').innerHTML = h;
+  }
+
+  function tauChart() {
+    const pp = { alpha: 0.00729735, mz: 91.1876, gz: DATA.pythia.settings.GammaZ, sw2: 0.2312, sw2eff: 0.2315 }, pts = [], n = 80;
+    for (let i = 0; i <= n; i++) { const sq = 3.6 * Math.pow(1000 / 3.6, i / n), s = sq * sq;
+      pts.push({ x: sq, y: Math.max(Math.abs(M.sigmaFF(s, 'tau', pp, 'mu', false) / M.sigmaFF(s, 'tau', pp) - 1), 1e-12) }); }
+    const py = DATA.pythia.ff_lowE.map((e) => ({ x: e.ecm, y: Math.max(Math.abs(M.sigmaFF(e.ecm * e.ecm, 'tau', pp, 'mu', false) / e.sigma_pb - 1), 1e-12) }));
+    const pyMass = DATA.pythia.ff_lowE.map((e) => ({ x: e.ecm, y: Math.max(Math.abs(M.sigmaFF(e.ecm * e.ecm, 'tau', pp) / e.sigma_pb - 1), 1e-12) }));
+    mkChart('chD', { datasets: [line('massless vs finite mass (analytic)', pts, css('--c1')), dots('massless analytic vs Pythia 8', py, css('--c2'), 'rect'),
+      dots('finite-mass analytic vs Pythia 8', pyMass, css('--c3'))],
+      xlog: true, ylog: true, xt: '√s [GeV]', yt: '|relative error of σ(μ⁺μ⁻→τ⁺τ⁻)|', yr: { min: 1e-6, max: 2 } });
   }
 
   function scanChart() {
@@ -140,6 +167,7 @@
     $('stress').textContent = 'stress domain: ' + d.precision.stress_domain;
     $('kernel').addEventListener('change', scanChart);
     scanChart();
+    tauChart();
   }
 
   ['tev', 'mz', 'gz', 'sw', 'thmin', 'fin', 'pyth'].forEach((id) => $(id).addEventListener('input', update));

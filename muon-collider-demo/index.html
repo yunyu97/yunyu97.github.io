@@ -88,10 +88,10 @@
 
 <h2>2. Interactive simulation</h2>
 <p class="lead">Choose the collision energy and electroweak inputs. The cross sections, distributions and neutrino flux below are computed live
-  (tree level, massless final-state fermions, unpolarised beams).</p>
+  (tree level, unpolarised beams; finite e and &tau; masses, massless quarks).</p>
 <div class="card">
   <div class="controls">
-    <div class="ctl"><label><span>&radic;s</span> <output id="o_tev"></output></label><input id="tev" type="range" min="-0.7" max="2" step="0.01" value="1"></div>
+    <div class="ctl"><label><span>&radic;s</span> <output id="o_tev"></output></label><input id="tev" type="range" min="-2" max="2" step="0.01" value="1"></div>
     <div class="ctl"><label><span>M<sub>Z</sub> [GeV]</span> <output id="o_mz"></output></label><input id="mz" type="range" min="60" max="400" step="0.0001" value="91.1876"></div>
     <div class="ctl"><label><span>&Gamma;<sub>Z</sub> [GeV]</span> <output id="o_gz"></output></label><input id="gz" type="range" min="0.5" max="40" step="0.0001" value="2.4952"></div>
     <div class="ctl"><label><span>sin&sup2;&theta;<sub>eff</sub></span> <output id="o_sw"></output></label><input id="sw" type="range" min="0.15" max="0.35" step="0.0005" value="0.2315"></div>
@@ -99,8 +99,10 @@
     <div class="ctl"><label>final state f in &mu;&mu;&rarr;f f&#772;</label>
       <select id="fin"><option value="e">e</option><option value="tau">&tau;</option><option value="u">u</option><option value="d">d</option><option value="s">s</option><option value="c">c</option><option value="b">b</option></select></div>
   </div>
+  <div class="note" id="fnote"></div>
   <div class="stats">
-    <div class="stat"><b id="s_sig">–</b><span>&sigma;(&mu;&mu;&rarr;f f&#772;) [pb]</span></div>
+    <div class="stat"><b id="s_sig">–</b><span id="l_sig">&sigma;(&mu;&mu;&rarr;f f&#772;) [pb]</span></div>
+    <div class="stat"><b id="s_beta">–</b><span>&beta;<sub>f</sub> of the final fermion (mass effect)</span></div>
     <div class="stat"><b id="s_afb">–</b><span>forward-backward asymmetry</span></div>
     <div class="stat"><b id="s_bh">–</b><span>&sigma;(&mu;&mu;&rarr;&mu;&mu;, &theta;&gt;&theta;<sub>min</sub>) [pb]</span></div>
     <div class="stat"><b id="s_int">–</b><span>s&ndash;t interference effect on that</span></div>
@@ -114,12 +116,16 @@
     <label style="margin-left:auto"><input type="checkbox" id="pyth" checked> overlay Pythia&nbsp;8</label>
   </div>
   <div class="charts">
-    <div class="card"><h3>cos&theta; of f &nbsp;(normalised)</h3><div class="chartbox"><canvas id="chA"></canvas></div></div>
-    <div class="card"><h3>&mu;&mu;&rarr;&mu;&mu; vs scattering angle</h3><div class="chartbox"><canvas id="chC"></canvas></div></div>
-    <div class="card"><h3>&nu;<sub>&mu;</sub> energy fraction from muon decay</h3><div class="chartbox"><canvas id="chB1"></canvas></div></div>
-    <div class="card"><h3>&nu;<sub>&mu;</sub> angle: &theta;&middot;&gamma;</h3><div class="chartbox"><canvas id="chB2"></canvas></div></div>
+    <div class="card"><h3 id="tA">cos&theta; of f (normalised)</h3><div class="chartbox"><canvas id="chA"></canvas></div></div>
+    <div class="card"><h3>&mu;<sup>+</sup>&mu;<sup>&minus;</sup> &rarr; &mu;<sup>+</sup>&mu;<sup>&minus;</sup> vs scattering angle <span class="badge">independent of f</span></h3><div class="chartbox"><canvas id="chC"></canvas></div></div>
+    <div class="card"><h3>&nu;<sub>&mu;</sub> energy fraction, muon decay in flight <span class="badge">independent of f</span></h3><div class="chartbox"><canvas id="chB1"></canvas></div></div>
+    <div class="card"><h3>&nu;<sub>&mu;</sub> angle &theta;&middot;&gamma;, muon decay in flight <span class="badge">independent of f</span></h3><div class="chartbox"><canvas id="chB2"></canvas></div></div>
   </div>
   <div class="note" id="pynote"></div>
+  <h3>Is neglecting the &tau; mass a good approximation?</h3>
+  <p class="lead" style="margin-bottom:6px">Fractional error of the massless-&tau; cross section for &mu;<sup>+</sup>&mu;<sup>&minus;</sup> &rarr; &tau;<sup>+</sup>&tau;<sup>&minus;</sup>
+    (curve: live analytic, massless vs finite mass; points: analytic vs Pythia&nbsp;8, which includes the &tau; mass). Pythia has a ~1e-4 convention offset, which limits the points at high energy.</p>
+  <div class="chartbox" style="height:300px"><canvas id="chD"></canvas></div>
 </div>
 
 <h2>3. Precision lab: why naive formulas fail at TeV energies</h2>
@@ -152,7 +158,8 @@
 
 <h2>Scope and honest limits</h2>
 <div class="note">
-  Tree level, fixed couplings, massless final-state fermions, unpolarised beams, no ISR or beam-energy spread; quark channels are leading order.
+  Tree level, fixed couplings, unpolarised beams, no ISR or beam-energy spread. The final-state mass is kept for e and &tau; (checked against Pythia&nbsp;8 from near threshold up);
+  quarks are massless with no thresholds or QCD corrections, so quark channels are leading-order estimates that are unreliable at low energy.
   Neutrino fluxes are the primary neutrinos from beam-muon decay; hadronic secondaries are not modelled.
   Pythia&nbsp;8 has no s&ndash;t interference for &mu;&mu;&rarr;&mu;&mu;, so that comparison covers the t-channel only.
   The surrogate is slower than the closed form it emulates, so no speed-up is claimed.
